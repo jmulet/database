@@ -905,7 +905,10 @@ public class MyDatabase {
                 fd.setNulo(rs1.getString("Null").equalsIgnoreCase("YES"));
                 String key = rs1.getString("Key");
                 fd.setKey( key );
-                fd.setDefecte( rs1.getString("Default"));
+                String defecte = rs1.getString("Default");
+                defecte = defecte==null?"(NULL)":defecte;
+                defecte = defecte.replaceAll("'", "");
+                fd.setDefecte( defecte  );
                 String extra = rs1.getString("Extra");
                 fd.setExtra( extra );
                 fd.setAutoIncrement( extra.equalsIgnoreCase("auto_increment") );
@@ -913,8 +916,11 @@ public class MyDatabase {
 
                 list.add(fd);                            
             }
-            rs1.close();
-            st.close();
+            if(rs1!=null)
+            {
+                rs1.close();
+                st.close();
+            }
 
         } catch (SQLException ex) {
             if(maxLogLines>0) {
@@ -1200,6 +1206,30 @@ public class MyDatabase {
         return exists;
     }
 
+    public ArrayList<String> listTables(String databaseName) {
+        ArrayList<String> list = new ArrayList<String>();
+        String SQL1 = "SELECT table_name FROM information_schema.TABLES "
+                + "WHERE TABLE_SCHEMA = '" + databaseName + "'";
+        try {
+            Statement st = this.createStatement();
+            ResultSet rs = this.getResultSet(SQL1, st);
+            while (rs != null && rs.next()) {
+                list.add(rs.getString(1));
+            }
+            if (rs != null) {
+                rs.close();
+                st.close();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(MyDatabase.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
+    public ArrayList<String> listTables() throws SQLException {
+
+        return listTables(this._connection.getCatalog());
+    }
 
 }
 
