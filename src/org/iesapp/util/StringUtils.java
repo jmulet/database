@@ -434,6 +434,18 @@ public static HashMap getSortedMap(HashMap hmap)
 
     
 
+    public static String displayComplexTime(long secondsIn) {
+        
+        long hours = secondsIn / 3600,
+         remainder = secondsIn % 3600,
+           minutes = remainder / 60,
+           seconds = remainder % 60;
+
+        return ((hours < 10 ? "0" : "") + hours
+                + ":" + (minutes < 10 ? "0" : "") + minutes
+                + ":" + (seconds < 10 ? "0" : "") + seconds);
+
+    }
 
 }
 

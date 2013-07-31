@@ -75,6 +75,7 @@ public class HtmlEscape {
       switch(chars[i]) 
       { 
         case '\n': out.append("<br/>"); break; //newline 
+        case '\t': out.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"); break; //tab indent
         case '\r': break; 
         default:found=false;break; 
       } 
